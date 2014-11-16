@@ -1,0 +1,73 @@
+#!/bin/bash
+
+echo "                                       "
+echo "============================================"
+echo " Step 1: Export Hadoop and Java class Path  "
+echo "============================================"
+echo "                                            "
+echo " HADOOP_CLASSPATH=$HADOOP_CLASSPATH:`echo *.jar`:`echo lib/*.jar | sed 's/ /:/g'`"
+
+echo " classpath=/usr/lib/hadoop/*:/usr/lib/hadoop/client-0.20/*"
+
+export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:`echo *.jar`:`echo lib/*.jar | sed 's/ /:/g'`
+
+export classpath=/usr/lib/hadoop/*:/usr/lib/hadoop/client-0.20/*
+
+echo "                                       "
+echo "============================================"
+echo " Step 2: Clean up old files(input and Output) in Cloudera if any"
+echo "============================================"
+echo "                                       "
+
+hadoop fs -rm -r /user/cloudera/output
+
+rm -rf  Plag_dir.jar
+
+rm -rf  Plag_dir
+
+mkdir   Plag_dir
+
+echo "                                       "
+echo "============================================"
+echo " Step 4: Compile code and build jar"
+echo "============================================"
+echo "                                       "
+
+echo "javac -cp $classpath -d Plag_dir Plagiarism.java"
+
+echo "jar -cvf Plag_dir.jar -C Plag_dir/ ."
+
+javac -cp $classpath -d Plag_dir Plagiarism.java
+
+jar   -cvf Plag_dir.jar -C Plag_dir/ .
+
+echo "                                       "
+echo "============================================"
+echo " Step 5: Execute Code:"
+echo "============================================"
+echo "                                       "
+
+echo " hadoop jar Plag_dir.jar Plagiarism /user/cloudera/input /user/cloudera/output"
+
+echo "                                       "
+
+hadoop jar Plag_dir.jar Plagiarism /user/cloudera/input /user/cloudera/output
+
+echo "                                       "
+echo "============================================"
+echo " Step 6: Output"
+echo "============================================"
+
+echo "                                       "
+echo " hadoop fs -cat /user/cloudera/output/part-r-00000"
+echo "                                    "
+
+
+hadoop fs -cat /user/cloudera/output/part-r-00000
+
+
+echo "                                    "
+echo "                                    "
+echo "                                    "
+
+
